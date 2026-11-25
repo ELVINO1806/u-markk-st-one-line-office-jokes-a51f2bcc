@@ -1,0 +1,2 @@
+still waiting for GET /api/me/wallets … (no answer from make.fun in 8 s; it gives up after 120 s)
+makefun anchor 50f964b8c35322d37bbd9257414b3eddc433e789 round 34277304

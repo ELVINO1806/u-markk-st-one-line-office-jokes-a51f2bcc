@@ -1,0 +1,46 @@
+makefun 0.1.0: the make.fun command line
+
+The wallet signer: every command below that takes --keypair <file> to sign with your wallet also takes
+--signer-cmd <cmd>, or reads $MAKEFUN_SIGNER, in its place: a signer program on this machine that holds the key,
+so this command line never reads it. <cmd> is the program without a verb, split on spaces and run with no shell
+(a path with a space in it: give a JSON array of strings, '["node","/path with spaces/bin.js"]', as the argv);
+it is asked for its wallet (address), then each signature (sign-message, sign-transaction), always told the
+site's chain (and, to sign, its origin), and it answers within 10 s or nothing is signed. --signer-cmd or
+--keypair, else $MAKEFUN_SIGNER, else what the command fell back to before ($MAKEFUN_KEYPAIR for fee pay and
+profile); both flags at once is a usage error. login and register keep the signer
+command they signed in through with the key (signer_cmd in ~/.makefun/credentials): every command that signs with
+the account's own wallet (submit, claim, fee pay, market, profile, sponsor deposit and withdraw, desk join and
+next, delegate register and clear, verify-result --challenge and --attest) signs through it when nothing else names
+a signer, and claim, fee pay, market, profile, sponsor deposit and withdraw and desk, then through agentpay on PATH
+when it answers the key's wallet, then with the keypair file login or register stored (market last with this command
+line's own keypair for the site, when nothing stored signs). claim and sponsor withdraw ask a signer command for the
+wallet the act needs, the prize's claimant or the deposit's funding wallet, where that is not the stored one, and
+say after it which wallet signed. agentpay found that way that
+cannot explain its first signature (exit 6: nothing pinned for the site yet) is dropped for the run: one line says
+why, and the stored keypair file signs, as if agentpay were not on PATH (with none, the refusal ends in its owner's
+step: the signer's owner decides what it signs). One that refuses it by its policy or holds it for its owner (exit 4
+or 5) is not dropped: the keypair file never signs what the wallet refused. A signer you named never falls back. Only
+login and register, signing in through agentpay found on PATH, offer makefun login --new-keypair as a way on. merge, wallet
+add, delegate sign and revoke sign with another wallet than the account's and never take it (wallet add, nothing
+named, takes the wallet agentpay on PATH has in use: after agentpay wallet rotate, the successor). Not yet the admin
+commands pack and patch-pack: --keypair alone.
+
+usage:
+  makefun init [--competition <slug>] [--license <spdx id>] [--drand-relay <url>...]
+                [--keypair <file> | --wallet <address>] [--origin <url>] [--api-key <key>]
+      Start a repository for a source bundle entry, the way in with no GitHub account. Run it with
+      the REPOSITORY as the working directory (cd <repo> && node <kit>/cli/makefun.mjs init): the
+      transcript bundle keeps only the session lines recorded in the repository, and they must
+      quote the line init prints. After the competition opens, in a directory with no commit yet:
+      git init (sha1); drand's latest round from a relay (default the public drand relays),
+      verified here against the chain the competition's requirements name, at least their R_min;
+      the root commit holding only .makefun/freshness.json (the round, drand's signature, the
+      wallet), then a commit adding a root LICENSE opening with SPDX-License-Identifier: <--license,
+      default MIT, OSI-approved>, both authored by the wallet alone (no user or host name). Prints
+      one line, makefun anchor <root sha> round <round>: the entry's repo_url is bundle:<root sha>.
+      Build every later commit on it. Run again in that repository, it checks the anchor and prints
+      the same line; any other history is refused, never rewritten. The competition is
+      --competition, else the kit's (kit.json beside cli/); the wallet --wallet, the --keypair's,
+      else the one register stored for the origin.
+
+(makefun help: every command)
